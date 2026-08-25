@@ -1,0 +1,27 @@
+# Local / self-hosted use: builds the image from this checkout.
+#
+#   docker compose up -d --build     →  http://localhost:5173
+#
+# ZimaOS cannot build from source — it installs a published image. Use
+# docker-compose.zimaos.yml there instead.
+
+name: icon-creator
+
+services:
+  icon-creator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: icon-creator:local
+    container_name: icon-creator
+    restart: unless-stopped
+    ports:
+      - "${ICON_CREATOR_PORT:-5173}:80"
+    environment:
+      TZ: ${TZ:-UTC}
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 5s

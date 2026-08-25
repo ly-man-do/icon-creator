@@ -1,0 +1,12 @@
+node_modules
+dist
+data/icons.js
+.git
+.github
+.claude
+.DS_Store
+*.log
+.env
+README.md
+docs
+docker-compose*.yml

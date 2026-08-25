@@ -1,0 +1,73 @@
+# ZimaOS / CasaOS install file.
+#
+# ZimaOS installs a published image — it does not build from source — so this
+# file points at GitHub Container Registry. Before using it, replace every
+# OWNER with your GitHub username or organisation (lowercase):
+#
+#   sed -i '' 's/OWNER/your-github-name/g' docker-compose.zimaos.yml
+#
+# Then in ZimaOS: App Store → the ⋮ menu → Install a customized app → switch to
+# the YAML/Import view and paste this file in.
+#
+# There are no volumes. The app is entirely client-side and keeps your designs
+# in the browser's localStorage, so the container holds no state and there is
+# nothing on the NAS to back up.
+
+name: icon-creator
+
+services:
+  icon-creator:
+    image: ghcr.io/OWNER/icon-creator:latest
+    container_name: icon-creator
+    restart: unless-stopped
+    ports:
+      # Host 5173 → nginx on 80. If you change the host port, change
+      # x-casaos.port_map below to match, or the app tile will open the wrong one.
+      - "5173:80"
+    environment:
+      TZ: UTC
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    x-casaos:
+      envs:
+        - container: TZ
+          description:
+            en_us: Time zone, e.g. Europe/London or America/Chicago.
+      ports:
+        - container: "80"
+          description:
+            en_us: Web interface.
+
+x-casaos:
+  architectures:
+    - amd64
+    - arm64
+  main: icon-creator
+  author: OWNER
+  developer: OWNER
+  category: Utilities
+  store_app_id: icon-creator
+  index: /
+  port_map: "5173"
+  scheme: http
+  title:
+    en_us: Icon Creator
+  tagline:
+    en_us: Design app icons and export them in every size and format you need.
+  description:
+    en_us: >-
+      A self-hosted icon designer. Pick from 2,132 Lucide icons, set the
+      background shape, colour or gradient, corner radius and border, then
+      export to PNG, SVG, WebP, JPEG or ICO at any size — including one-click
+      favicon, iOS and Android size sets that download as a single zip.
+      Runs entirely in your browser and makes no outbound network requests.
+  # docs/icon.png is in this repo — the app's own logo, exported by the app.
+  icon: https://raw.githubusercontent.com/OWNER/icon-creator/main/docs/icon.png
+  # Optional. Drop a PNG at docs/screenshot.png and uncomment to show it on the
+  # app's store page.
+  # screenshot_link:
+  #   - https://raw.githubusercontent.com/OWNER/icon-creator/main/docs/screenshot.png

@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Icon Creator</title>
+    <meta name="description" content="Design app icons from the Lucide icon set and export them as PNG, SVG, WebP, JPEG or ICO." />
+    <!-- Placeholder only: app.js replaces this with the brand mark, generated
+         from the same code that draws the logo, so the two cannot drift. -->
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="src/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark" id="brandMark" aria-hidden="true"></span>
+        <span>
+          <strong>Icon Creator</strong>
+          <small id="lucideVersion"></small>
+        </span>
+      </div>
+      <div class="topbar-actions">
+        <button type="button" class="btn btn-icon" id="btnTheme" title="Theme" aria-label="Theme"></button>
+        <button type="button" class="btn" id="btnReset">Reset design</button>
+        <button type="button" class="btn" id="btnCopySvg">Copy SVG</button>
+        <button type="button" class="btn btn-primary" id="btnQuickPng">Download PNG</button>
+      </div>
+    </header>
+
+    <main class="layout">
+      <!-- ---------------------------------------------------------------- -->
+      <section class="stage" aria-label="Preview">
+        <div class="preview-wrap">
+          <div class="preview-frame" id="previewFrame" data-checker="true">
+            <div class="preview-icon" id="preview" role="img" aria-label="Icon preview"></div>
+          </div>
+          <div class="preview-meta">
+            <span id="previewCaption">house</span>
+            <button type="button" class="link-btn" id="btnToggleChecker">Hide transparency grid</button>
+          </div>
+        </div>
+
+        <div class="thumbstrip" aria-label="Size previews">
+          <div class="thumb" data-size="16"><div class="thumb-box" style="--px:16px"></div><span>16</span></div>
+          <div class="thumb" data-size="32"><div class="thumb-box" style="--px:32px"></div><span>32</span></div>
+          <div class="thumb" data-size="64"><div class="thumb-box" style="--px:64px"></div><span>64</span></div>
+          <div class="thumb" data-size="128"><div class="thumb-box" style="--px:128px"></div><span>128</span></div>
+        </div>
+      </section>
+
+      <!-- ---------------------------------------------------------------- -->
+      <section class="panel" aria-label="Controls">
+        <!-- Background ------------------------------------------------- -->
+        <details class="group" open>
+          <summary>Background</summary>
+          <div class="group-body">
+            <div class="field">
+              <label>Shape</label>
+              <div class="segmented" id="shapeToggle" role="radiogroup" aria-label="Shape">
+                <button type="button" role="radio" data-shape="square" aria-checked="true">Square</button>
+                <button type="button" role="radio" data-shape="circle" aria-checked="false">Circle</button>
+              </div>
+            </div>
+
+            <div class="field" id="radiusField">
+              <label for="radius">Corner radius <output id="radiusOut"></output></label>
+              <input type="range" id="radius" min="0" max="50" step="0.1" value="22" />
+            </div>
+
+            <div class="field">
+              <label>Platform preset</label>
+              <div class="sizes" id="radiusPresets"></div>
+            </div>
+
+            <div class="field">
+              <label>Fill</label>
+              <div class="segmented" id="bgModeToggle" role="radiogroup" aria-label="Background fill">
+                <button type="button" role="radio" data-bgmode="solid" aria-checked="true">Solid</button>
+                <button type="button" role="radio" data-bgmode="gradient" aria-checked="false">Gradient</button>
+                <button type="button" role="radio" data-bgmode="none" aria-checked="false">None</button>
+              </div>
+            </div>
+
+            <div class="field color-field" id="bgColorField">
+              <label for="bgColorText">Color</label>
+              <div class="color-row">
+                <input type="color" id="bgColor" value="#4f7cff" aria-label="Background color picker" />
+                <input type="text" id="bgColorText" class="hex" spellcheck="false" value="#4F7CFF" aria-label="Background color hex value" />
+              </div>
+              <div class="swatches" id="bgSwatches"></div>
+              <div class="presets">
+                <button type="button" class="link-btn" id="btnSwapColors">⇄ Swap with icon color</button>
+              </div>
+            </div>
+
+            <div class="field color-field hidden" id="bgColor2Field">
+              <label for="bgColor2Text">Gradient end</label>
+              <div class="color-row">
+                <input type="color" id="bgColor2" value="#8b5cf6" aria-label="Gradient end color picker" />
+                <input type="text" id="bgColor2Text" class="hex" spellcheck="false" value="#8B5CF6" aria-label="Gradient end color hex value" />
+              </div>
+              <label for="gradientAngle" class="sub">Angle <output id="gradientAngleOut"></output></label>
+              <input type="range" id="gradientAngle" min="0" max="360" step="1" value="135" />
+            </div>
+          </div>
+        </details>
+
+        <!-- Border ----------------------------------------------------- -->
+        <details class="group">
+          <summary>Border <span class="badge" id="borderBadge">off</span></summary>
+          <div class="group-body">
+            <div class="field row">
+              <label for="borderOn">Show border</label>
+              <input type="checkbox" id="borderOn" class="switch" />
+            </div>
+            <div class="field" id="borderWidthField">
+              <label for="borderWidth">Thickness <output id="borderWidthOut"></output></label>
+              <input type="range" id="borderWidth" min="0.5" max="15" step="0.5" value="3" />
+            </div>
+            <div class="field color-field" id="borderColorField">
+              <label for="borderColorText">Color</label>
+              <div class="color-row">
+                <input type="color" id="borderColor" value="#1e293b" aria-label="Border color picker" />
+                <input type="text" id="borderColorText" class="hex" spellcheck="false" value="#1E293B" aria-label="Border color hex value" />
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <!-- Icon ------------------------------------------------------- -->
+        <details class="group" open>
+          <summary>Icon <span class="badge" id="iconBadge">house</span></summary>
+          <div class="group-body">
+            <div class="field">
+              <label for="iconSearch">Lucide icon</label>
+              <div class="search-row">
+                <input type="search" id="iconSearch" placeholder="Search 1,776 icons…" spellcheck="false" autocomplete="off" />
+                <button type="button" class="btn btn-ghost" id="btnRandomIcon" title="Pick a random icon">Random</button>
+              </div>
+              <div class="segmented" id="sourceToggle" role="radiogroup" aria-label="Icon collection">
+                <button type="button" role="radio" data-source="all" aria-checked="true">All</button>
+                <button type="button" role="radio" data-source="core" aria-checked="false">Core</button>
+                <button type="button" role="radio" data-source="lab" aria-checked="false">Lab</button>
+              </div>
+              <p class="hint" id="searchCount"></p>
+            </div>
+            <div class="icon-grid" id="iconGrid" role="listbox" aria-label="Lucide icons" tabindex="0"></div>
+
+            <div class="field">
+              <label for="iconScale">Icon size <output id="iconScaleOut"></output></label>
+              <input type="range" id="iconScale" min="10" max="100" step="1" value="55" />
+            </div>
+            <div class="field">
+              <label for="strokeWidth">Stroke weight <output id="strokeWidthOut"></output></label>
+              <input type="range" id="strokeWidth" min="0.5" max="4" step="0.05" value="2" />
+            </div>
+            <div class="field color-field">
+              <label for="iconColorText">Icon color</label>
+              <div class="color-row">
+                <input type="color" id="iconColor" value="#ffffff" aria-label="Icon color picker" />
+                <input type="text" id="iconColorText" class="hex" spellcheck="false" value="#FFFFFF" aria-label="Icon color hex value" />
+              </div>
+              <div class="swatches" id="iconSwatches"></div>
+            </div>
+          </div>
+        </details>
+
+        <!-- Export ----------------------------------------------------- -->
+        <details class="group" open>
+          <summary>Export</summary>
+          <div class="group-body">
+            <div class="field">
+              <label for="filename">File name</label>
+              <input type="text" id="filename" spellcheck="false" />
+              <p class="hint" id="filenameHint"></p>
+            </div>
+
+            <div class="field">
+              <label>Format</label>
+              <div class="segmented wrap" id="formatToggle" role="radiogroup" aria-label="Export format">
+                <button type="button" role="radio" data-format="png" aria-checked="true">PNG</button>
+                <button type="button" role="radio" data-format="svg" aria-checked="false">SVG</button>
+                <button type="button" role="radio" data-format="webp" aria-checked="false">WebP</button>
+                <button type="button" role="radio" data-format="jpeg" aria-checked="false">JPEG</button>
+                <button type="button" role="radio" data-format="ico" aria-checked="false">ICO</button>
+              </div>
+              <p class="hint" id="formatHint"></p>
+            </div>
+
+            <div class="field" id="sizesField">
+              <label>Sizes <output id="sizesOut"></output></label>
+              <div class="sizes" id="sizeChips"></div>
+              <div class="search-row">
+                <input type="number" id="customSize" min="1" max="4096" step="1" placeholder="Custom px" />
+                <button type="button" class="btn btn-ghost" id="btnAddSize">Add</button>
+              </div>
+              <div class="presets">
+                <button type="button" class="link-btn" data-preset="favicon">Favicon set</button>
+                <button type="button" class="link-btn" data-preset="ios">iOS set</button>
+                <button type="button" class="link-btn" data-preset="android">Android set</button>
+                <button type="button" class="link-btn" data-preset="clear">Clear</button>
+              </div>
+            </div>
+
+            <div class="field row hidden" id="zipField">
+              <label for="asZip">Bundle as .zip</label>
+              <input type="checkbox" id="asZip" class="switch" checked />
+            </div>
+
+            <button type="button" class="btn btn-primary btn-block" id="btnExport">Export</button>
+            <p class="hint" id="exportStatus" role="status" aria-live="polite"></p>
+          </div>
+        </details>
+      </section>
+    </main>
+
+    <script type="module" src="src/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,26 @@
+{
+  "name": "icon-creator",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Browser-based app icon designer built on the Lucide icon set.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "prestart": "npm run build:icons",
+    "start": "node server.mjs",
+    "dev": "npm start",
+    "prebuild": "npm run build:icons",
+    "build": "node tools/build-single.mjs",
+    "build:icons": "node tools/build-icons.mjs",
+    "docker:build": "docker compose build",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down"
+  },
+  "devDependencies": {
+    "@lucide/lab": "^0.2.0",
+    "lucide-static": "^1.33.0"
+  }
+}
