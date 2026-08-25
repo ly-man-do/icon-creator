@@ -16,10 +16,11 @@ Three ways, depending on what you want.
 
 1. Push this repo to GitHub. The included workflow builds and publishes a
    multi-architecture image to GitHub Container Registry on every push to `main`.
-2. Edit `docker-compose.zimaos.yml` and replace `OWNER` with your GitHub name:
+2. `docker-compose.zimaos.yml` already points at `ghcr.io/ly-man-do/icon-creator`.
+   If you forked this repo, swap in your own GitHub name:
 
    ```bash
-   sed -i '' 's/OWNER/your-github-name/g' docker-compose.zimaos.yml
+   sed -i '' 's/ly-man-do/your-github-name/g' docker-compose.zimaos.yml
    ```
 
 3. In ZimaOS: **App Store → ⋮ → Install a customized app**, switch to the
@@ -188,7 +189,7 @@ A few decisions worth knowing about if you change it:
 - **`/standalone.html`** is the single-file build, served from your own instance if you
   ever want to grab a portable copy.
 
-The published image is `ghcr.io/OWNER/icon-creator`, tagged `latest` from `main` plus
+The published image is `ghcr.io/ly-man-do/icon-creator`, tagged `latest` from `main` plus
 semver tags when you push a `v*` tag. The workflow needs no secrets — the built-in
 `GITHUB_TOKEN` covers it, as long as **Settings → Actions → Workflow permissions** allows
 package writes.

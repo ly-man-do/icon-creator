@@ -1,10 +1,11 @@
 # ZimaOS / CasaOS install file.
 #
 # ZimaOS installs a published image — it does not build from source — so this
-# file points at GitHub Container Registry. Before using it, replace every
-# OWNER with your GitHub username or organisation (lowercase):
+# file points at GitHub Container Registry, at the image this repo's workflow
+# publishes. If you forked this, swap the owner to your own GitHub username or
+# organisation (lowercase):
 #
-#   sed -i '' 's/OWNER/your-github-name/g' docker-compose.zimaos.yml
+#   sed -i '' 's/ly-man-do/your-github-name/g' docker-compose.zimaos.yml
 #
 # Then in ZimaOS: App Store → the ⋮ menu → Install a customized app → switch to
 # the YAML/Import view and paste this file in.
@@ -17,7 +18,7 @@ name: icon-creator
 
 services:
   icon-creator:
-    image: ghcr.io/OWNER/icon-creator:latest
+    image: ghcr.io/ly-man-do/icon-creator:latest
     container_name: icon-creator
     restart: unless-stopped
     ports:
@@ -47,8 +48,8 @@ x-casaos:
     - amd64
     - arm64
   main: icon-creator
-  author: OWNER
-  developer: OWNER
+  author: ly-man-do
+  developer: ly-man-do
   category: Utilities
   store_app_id: icon-creator
   index: /
@@ -66,8 +67,8 @@ x-casaos:
       favicon, iOS and Android size sets that download as a single zip.
       Runs entirely in your browser and makes no outbound network requests.
   # docs/icon.png is in this repo — the app's own logo, exported by the app.
-  icon: https://raw.githubusercontent.com/OWNER/icon-creator/main/docs/icon.png
+  icon: https://raw.githubusercontent.com/ly-man-do/icon-creator/main/docs/icon.png
   # Optional. Drop a PNG at docs/screenshot.png and uncomment to show it on the
   # app's store page.
   # screenshot_link:
-  #   - https://raw.githubusercontent.com/OWNER/icon-creator/main/docs/screenshot.png
+  #   - https://raw.githubusercontent.com/ly-man-do/icon-creator/main/docs/screenshot.png

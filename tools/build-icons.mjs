@@ -13,7 +13,7 @@
  * separately and do overlap (`broom` exists in both), so the prefix is what
  * keeps keys unique — and it doubles as the flag the UI filters on.
  */
-import { readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
@@ -83,6 +83,8 @@ export const TAGS = ${JSON.stringify(searchTags)};
 `;
 
 const dest = join(root, 'data/icons.js');
+// data/ holds only this generated file, so it is absent from a fresh clone.
+mkdirSync(dirname(dest), { recursive: true });
 writeFileSync(dest, out);
 console.log(
   `Wrote ${dest}: ${coreCount} core + ${labCount} lab = ${coreCount + labCount} icons, ` +
